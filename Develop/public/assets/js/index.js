@@ -134,6 +134,9 @@ const renderNoteList = async (notes) => {
         notes
     );
     let jsonNotes = await notes.json();
+
+    console.log('Parsed JSON notes:', jsonNotes);
+
     if (window.location.pathname === '/notes') {
         noteList.forEach((el) => (el.innerHTML = ''));
     }

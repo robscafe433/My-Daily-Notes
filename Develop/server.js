@@ -7,13 +7,13 @@ const api = require('./api');
 
 const PORT = process.env.port || 3004;
 
-app.use(express.static('public'));
-
 // Middleware for parsing JSON and urlencoded form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(api);
+
+app.use(express.static('public'));
 
 // GET Route for homepage
 app.get('/', (req, res) =>
