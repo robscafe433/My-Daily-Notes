@@ -12,7 +12,9 @@ if (window.location.pathname === '/notes') {
     saveNoteBtn = document.querySelector('.save-note');
     newNoteBtn = document.querySelector('.new-note');
     clearBtn = document.querySelector('.clear-btn');
-    noteList = document.querySelectorAll('.list-container .list-group');
+    noteList = document.querySelectorAll('.list-container .list-group'); //Note: on "Specific targeting"
+    //This targets only .list-group elements that are descendants of .list-container elements. That is
+    // why both classes are included.
 }
 
 // Show an element
@@ -28,6 +30,7 @@ const hide = (elem) => {
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
 
+// fetch call similar to requests made on thunderClient . Here it is a GET -route reqeust.
 const getNotes = () =>
     fetch('/api/notes', {
         method: 'GET',
@@ -54,7 +57,7 @@ const deleteNote = (id) =>
     });
 
 const renderActiveNote = () => {
-    hide(saveNoteBtn);
+    hide(saveNoteBtn); // saveNoteBtn is a binding to notes.html first button element. Changes ->  elem.style.display = 'none';
     hide(clearBtn);
 
     if (activeNote.id) {
@@ -85,7 +88,8 @@ const handleNoteSave = () => {
 
 // Delete the clicked note
 const handleNoteDelete = (e) => {
-    // Prevents the click listener for the list from being called when the button inside of it is clicked
+    // Prevents the click listener for the list from being called when the
+    // button inside of it is clicked
     e.stopPropagation();
 
     const note = e.target;
@@ -101,17 +105,24 @@ const handleNoteDelete = (e) => {
     });
 };
 
-// Sets the activeNote and displays it
+// Sets the activeNote and displays it   // Note: this previously being called from the
+// dynamically-created -> span-element.
 const handleNoteView = (e) => {
     e.preventDefault();
+    //Note: activeNote was previously created as an empty object { } .
     activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
+    // So activeNote which is an empty object {  } stores data-note,  see console.log.
+    console.log(
+        'From handleNoteView function , takes in e and targets parentElement from e .getAttribute -> data-note . Also here is data-note',
+        activeNote
+    );
     renderActiveNote();
 };
 
 // Sets the activeNote to and empty object and allows the user to enter a new note
 const handleNewNoteView = (e) => {
     activeNote = {};
-    show(clearBtn);
+    show(clearBtn); //clearBtn is the binding to html element (above).
     renderActiveNote();
 };
 
@@ -129,29 +140,34 @@ const handleRenderBtns = () => {
 
 // Render the list of note titles
 const renderNoteList = async (notes) => {
-    console.log(
-        '***************Here are notes - start of renderNoteList function',
-        notes
-    );
     let jsonNotes = await notes.json();
 
-    console.log('Parsed JSON notes:', jsonNotes);
-
     if (window.location.pathname === '/notes') {
-        noteList.forEach((el) => (el.innerHTML = ''));
+        // resets innerHTML to ' ' nothing. -> prevents duplicates if adding in future.
+        //So will erase and
+        // alert('stop - beore deleltion of notelist');
+        noteList.forEach((el) => (el.innerHTML = '')); // noteList is binding for UL element
+        // alert('after deletion of notelist');
     }
 
     let noteListItems = [];
 
     // Returns HTML element with or without a delete button
     const createLi = (text, delBtn = true) => {
-        const liEl = document.createElement('li');
-        liEl.classList.add('list-group-item');
+        const liEl = document.createElement('li'); // Dynamically creates a "list item",
+        //This element is not yet added to the DOM; it is simply created in memory and
+        //can be manipulated or appended to the DOM later.
+
+        //So ul was hard coded in notes.html *And above dynamically creates the li items.
+
+        liEl.classList.add('list-group-item'); // "classList.add" allows for a class
+        // "list-group-item" to be dynamically created and added to the element at runtime.
 
         const spanEl = document.createElement('span');
         spanEl.classList.add('list-item-title');
         spanEl.innerText = text;
-        spanEl.addEventListener('click', handleNoteView);
+        spanEl.addEventListener('click', handleNoteView); // Note: eventListener is attached to the spanEl,
+        // handleNoteView will target the parent element to get data-note (line 210 .)
 
         liEl.append(spanEl);
 
@@ -169,22 +185,43 @@ const renderNoteList = async (notes) => {
             liEl.append(delBtnEl);
         }
 
-        return liEl;
-    };
+        return liEl; // returns the dynamically created <li> and appends.
+    }; // returns dynamically created variables liEl and appends.
+    // Note: createLi is like a function, has a function declaraiont assigned to it.
+
+    //
+
+    //
 
     if (jsonNotes.length === 0) {
         noteListItems.push(createLi('No saved Notes', false));
     }
 
     jsonNotes.forEach((note) => {
-        const li = createLi(note.title);
-        li.dataset.note = JSON.stringify(note);
+        // So this forEach pushes the dynamically created elements
+        // along with data in respective slots (span.innerHTML through createLi call and
+        // also sets note-data as an attribute of li element) and pushes each one to the array
+        // noteListItems. And that is all.
 
-        noteListItems.push(li);
+        console.log('Here is individual note', note);
+        const li = createLi(note.title); // createLi function dynamically creates
+        // the li element, and stores this in const liEl.
+        // the purpose of this function-call is to send->add innerHTML to the span and save
+        // the dyncamically created liEl/appends to this newly created const called li.
+
+        li.dataset.note = JSON.stringify(note); // this creates the data-note attribute on the
+        // li variable. *Notice that they have to be JSON strings.
+
+        noteListItems.push(li); // noteListItems initially is an empty [ ] array.
     });
 
+    console.log('Here is the compilation of noteListItems: ', noteListItems);
+
     if (window.location.pathname === '/notes') {
-        noteListItems.forEach((note) => noteList[0].append(note));
+        noteListItems.forEach((note) => noteList[0].append(note)); // noteList is
+        // binding for ul in , in this case for notes.html // noteList[0] is part of the
+        //node list. example: there could be more than one "'.list-container .list-group'"
+        // this displays the dynamically created elements inside the ul element.
     }
 };
 

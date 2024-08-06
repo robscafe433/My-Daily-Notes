@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 // Helper functions for reading and writing to the JSON file
+const { readFromFile, readAndAppend } = require('../helpers/fsUtils');
 
 // const notesData = require('../db/db.json');
 
@@ -12,7 +13,6 @@ const fs = require('fs');
 router.get('/', (req, res) => {
     console.log('First step inside /api/notes  route 111111111111111');
     readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
-    // console.log('Here is data', data);
 });
 
 module.exports = router;

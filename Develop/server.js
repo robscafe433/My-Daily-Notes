@@ -11,7 +11,7 @@ const PORT = process.env.port || 3004;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(api);
+app.use('/api', api);
 
 app.use(express.static('public'));
 
