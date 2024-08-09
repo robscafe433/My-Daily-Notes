@@ -56,6 +56,8 @@ const deleteNote = (id) =>
         },
     });
 
+const clearForm = () => {};
+
 const renderActiveNote = () => {
     hide(saveNoteBtn); // saveNoteBtn is a binding to notes.html first button element. Changes ->  elem.style.display = 'none';
     hide(clearBtn);
@@ -80,7 +82,11 @@ const handleNoteSave = () => {
         title: noteTitle.value,
         text: noteText.value,
     };
+
+    console.log('Inside handleNoteSave, and here is newNote object: ', newNote);
+
     saveNote(newNote).then(() => {
+        alert('stop');
         getAndRenderNotes();
         renderActiveNote();
     });
@@ -137,6 +143,22 @@ const handleRenderBtns = () => {
         show(saveNoteBtn);
     }
 };
+
+if (window.location.pathname === '/notes' && noteTitle && noteText) {
+    noteForm.addEventListener('input', () => {
+        console.log('EventListener for noteForm triggered');
+        handleRenderBtns();
+    });
+
+    saveNoteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+
+        handleNoteSave();
+    });
+
+    newNoteBtn.addEventListener('click', handleNewNoteView);
+    clearBtn.addEventListener('click', renderActiveNote);
+}
 
 // Render the list of note titles
 const renderNoteList = async (notes) => {
@@ -228,7 +250,7 @@ const renderNoteList = async (notes) => {
 // Gets notes from the db and renders them to the sidebar
 const getAndRenderNotes = () => getNotes().then(renderNoteList);
 
-if (window.location.pathname === '/api/notes') {
+if (window.location.pathname === '/notes') {
     saveNoteBtn.addEventListener('click', handleNoteSave);
     newNoteBtn.addEventListener('click', handleNewNoteView);
     clearBtn.addEventListener('click', renderActiveNote);
