@@ -5,7 +5,7 @@ const app = express();
 
 const api = require('./api');
 
-const PORT = process.env.port || 3004;
+const PORT = process.env.PORT || 3004;
 
 // Middleware for parsing JSON and urlencoded form data
 app.use(express.json());

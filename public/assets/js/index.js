@@ -86,7 +86,6 @@ const handleNoteSave = () => {
     console.log('Inside handleNoteSave, and here is newNote object: ', newNote);
 
     saveNote(newNote).then(() => {
-        alert('stop');
         getAndRenderNotes();
         renderActiveNote();
     });
@@ -167,9 +166,8 @@ const renderNoteList = async (notes) => {
     if (window.location.pathname === '/notes') {
         // resets innerHTML to ' ' nothing. -> prevents duplicates if adding in future.
         //So will erase and
-        // alert('stop - beore deleltion of notelist');
+
         noteList.forEach((el) => (el.innerHTML = '')); // noteList is binding for UL element
-        // alert('after deletion of notelist');
     }
 
     let noteListItems = [];
