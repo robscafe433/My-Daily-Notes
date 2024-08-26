@@ -149,11 +149,11 @@ if (window.location.pathname === '/notes' && noteTitle && noteText) {
         handleRenderBtns();
     });
 
-    saveNoteBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
+    // saveNoteBtn.addEventListener('click', (e) => {
+    //     e.stopPropagation();
 
-        handleNoteSave();
-    });
+    //     handleNoteSave();
+    // });
 
     newNoteBtn.addEventListener('click', handleNewNoteView);
     clearBtn.addEventListener('click', renderActiveNote);
